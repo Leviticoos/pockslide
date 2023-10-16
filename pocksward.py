@@ -52,7 +52,7 @@ class Check:
             return check, probN, roll, adjActVtr
         else:
             return check
-
+    
 
 class Game:
     def __init__(self, t):
@@ -66,8 +66,9 @@ class Game:
 class Player:
     '''Player is a class that contains the player's skill vector, nerual net, TODO'''
 
-    def __init__(self, sklVect, sitAware, sitAct):
+    def __init__(self, name, sklVect, sitAware, sitAct):
         #Define behavior controling variables
+        self.name = name
         self.skillVector = np.array(sklVect)
         self.sitAware = np.array(sitAware)
         self.sitAct = np.array(sitAct)
@@ -75,7 +76,10 @@ class Player:
         #define empty data set
         self.stats = [] #2D array arguments: Year, Team, Launches, unitsFromLaunches, Swats, unitsFromSwats, 
 
-    def sklVector(self):
+    def getName(self):
+        return self.name
+
+    def getSklVector(self):
         #gives players skill vector
         return self.sklVector
     
@@ -96,7 +100,18 @@ class Team:
         self.coach = coach
         self.players = players
         self.stats = stats
-        
+    
+    def setOrder(self):
+        newPlayers = []
+
+        #TODO add re-ordering code
+        for i in self.players:
+            newPlayers.append(i)
+
+        self.players = newPlayers
+
+    def getOrder(self):
+        return self.players
         
     def fireCoach(self, newCoach):
         self.coach = newCoach
@@ -104,3 +119,15 @@ class Team:
     def updateStats(self, newStats):
         self.stats.append(newStats)
 
+
+#MISC entities
+
+class Fairground:
+    def __init__(self, name, goalVct):
+        self.name = name
+        self.goalVct = np.array(goalVct)
+
+    def getGoalVct(self):
+        return self.goalVct
+    def getName(self):
+        return self.name

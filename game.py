@@ -24,18 +24,11 @@ class GameStateEnum(Enum):
         hammer      = 10
         dink        = 11
         nail        = 12
-        recess      = 13
-        final       = 14
+        postNail    = 13
+        recess      = 14
+        final       = 15
 
 class Game:
-    
-    #define Checks
-    switchChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], n=10)
-    braekChk    = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]])
-    gasChk      = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-    hammerChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], n=3) 
-    dinkChk     = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]])
-    nailChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]) 
              
     def __init__(self, homeTeam, awayTeam, fairground, startTimeSST):
         self.homeTeam = homeTeam
@@ -45,40 +38,59 @@ class Game:
         self.clock = startTimeSST
         self.gameState = GameStateEnum.preGame
         self.iterator = 1
-        self.inning = 1
+        self.pylon = 1
+        self.homeUp = True
         self.teamUp = self.homeTeam
         self.teamDown = self.awayTeam
         self.scores = [0,0] #first is home team, second is away
-        self.gameVector = [self.gameState, self.iterator, self.inning, , self.scores] #not sure if this is needed?
+
+        #define Checks
+        self.switchChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=10)
+        self.braekChk    = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
+        self.gasChk      = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1)
+        self.hammerChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3) 
+        self.dinkChk     = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
+        self.nailChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1) 
+
         #Todo, game wide special events? Weather? Setup players random change?
         #or do I put that in pregame?
     
     def run(self):
         if self.gameState.value == 1:
             #pregame code
+            waitTimeSuggestion = 1000*120
+            #todo: set up 
+            text = 'Warmimng up!'
             
+            return [], text, waitTimeSuggestion
             
         elif self.gameState.value == 2:
             #slide
             u
         elif self.gameState.value == 6:
             #breather
+            u
         elif self.gameState.value == 7:
             #switch
-            #Get switcher for the inning
-            playerA = self.teamUp.getorder()[self.inning]
+            #Get switcher for the pylon
+            player = self.teamUp.getorder()[self.pylon]
             #feed the switcher the game state, get his actVct
-            actVct = playerA.think(gameState)
-            
-            
-            
-    #First throw
-    actVct = playerA.think(gameState)
-    firstOffense = offOne.run([1,1,1,1], actVct, playerA.getSklVct())
-    outData = [playerA, ]
-    
-    if firstOffense == False:
-        outData.a
-    else:
- 
-        firstDefense = defOne.run(actVct, playerB.think(gameState), playerB.getSklVct())
+            actVct = player.think() #TODO WITH ALEX
+            #Run the check
+            result = self.switchChk.run([1,1,1,1], actVct, player.getSklVct())
+            #get the time for play
+            waitTime = self.switchChk.time()
+            self.clock += waitTime
+            #branch depending on result
+            stateSimmed = self.gameState
+            if result:
+                 self.gameState.value = 8
+            else:
+                 self.gameState.value = 13
+            #return results
+            return result, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
+        
+
+
+        
+

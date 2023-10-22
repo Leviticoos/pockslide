@@ -56,7 +56,18 @@ class Check:
     def waitTime(self):
         return random.exponential(self.scale)
 
-    
+class continuousCheck():
+    def __init__(self, meanVct, meanScaler, meanB, sigmaVct, sigmaScaler, sigmaB):
+        '''
+        Continuous Check gives us a building block for actions that give a continuos result (like how long a hit was), instead of just sucseed/fail
+        mean of action = meanScaler * (meanVct dot player skill vector) + meanB
+        '''
+        self.meanVct = meanVct
+        self.meanScaler = meanScaler
+        self.meanB = meanB
+        self.sigmaVct = sigmaVct
+        self.sigmaScaler = sigmaScaler
+        
 
 class Game:
     def __init__(self, t):

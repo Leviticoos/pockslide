@@ -45,12 +45,16 @@ class Game:
         self.scores = [0,0] #first is home team, second is away
 
         #define Checks
-        self.switchChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=10)
-        self.braekChk    = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
-        self.gasChk      = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1)
-        self.hammerChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3) 
-        self.dinkChk     = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
-        self.nailChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1) 
+        #scramble Chekcks
+        self.slideChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=10)
+        
+        #Scrum Checks
+        self.switchChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=10)
+        self.braekChk   = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
+        self.gasChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1)
+        self.hammerChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3) 
+        self.dinkChk    = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
+        self.nailChk    = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1) 
 
         #Todo, game wide special events? Weather? Setup players random change?
         #or do I put that in pregame?
@@ -66,7 +70,24 @@ class Game:
             
         elif self.gameState.value == 2:
             #slide
-            u
+            #Get slider for the pylon
+            player = self.teamUp.getorder()[self.pylon]
+            #feed the acting player the game state, get his actVct
+            actVct = player.think() #TODO WITH ALEX
+            #Run the check
+            result = self.slideChk.run([1,1,1,1], actVct, player.getSklVct())
+            #get the time for play
+            waitTime = self.slideChk.time()
+            self.clock += waitTime
+            #branch depending on result
+            stateSimmed = self.gameState
+            if result:
+                 self.gameState.value = 8
+            else:
+                 self.gameState.value = 13
+            #return results
+            return result, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
+        
         elif self.gameState.value == 6:
             #breather
             u

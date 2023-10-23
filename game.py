@@ -62,16 +62,40 @@ class Game:
     def run(self):
         if self.gameState.value == 1:
             #pregame code
-            waitTimeSuggestion = 1000*120
+            waitTime = 1000*60*5 #five minutes to talk
             #todo: set up 
             text = 'Warmimng up!'
+            #advance enum
+            stateSimmed = self.gameState
+            self.gameState = GameStateEnum.slide
             
-            return [], text, waitTimeSuggestion
+            return True, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime
             
         elif self.gameState.value == 2:
             #slide
             #Get slider for the pylon
-            player = self.teamUp.getorder()[self.pylon]
+            player = self.teamUp.getOrder()[self.pylon]
+            #feed the acting player the game state, get his actVct
+            actVct = player.think() #TODO WITH ALEX
+            #Run the check
+            result = self.slideChk.run([1,1,1,1], actVct, player.getSklVct())
+            #get the time for play
+            waitTime = self.slideChk.waitTime()
+            self.clock += waitTime
+            #branch depending on result
+            stateSimmed = self.gameState
+            if result:
+                 self.gameState.value = 3
+            else:
+                 self.gameState.value = 2
+                 self.iterator += 1
+            #return results
+            return result, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
+        
+        elif self.gameState.value == 3:
+            #clink
+            #Get clinker for the pylon
+            player = self.teamUp.getorder()[(self.pylon + 1)%5]
             #feed the acting player the game state, get his actVct
             actVct = player.think() #TODO WITH ALEX
             #Run the check
@@ -82,12 +106,13 @@ class Game:
             #branch depending on result
             stateSimmed = self.gameState
             if result:
-                 self.gameState.value = 8
+                 self.gameState.value = 3
             else:
-                 self.gameState.value = 13
+                 self.gameState.value = 2
+                 self.iterator += 1
             #return results
             return result, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
-        
+
         elif self.gameState.value == 6:
             #breather
             u

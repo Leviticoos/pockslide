@@ -7,7 +7,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from enum import Enum
-from random import random
+import random
 
 
 #Game Code
@@ -54,7 +54,7 @@ class Check:
         else:
             return check
     def waitTime(self):
-        return random.exponential(self.scale)
+        return exponential(self.scale)
 
 class continuousCheck():
     def __init__(self, meanVct, meanScaler, meanB, sigmaVct, sigmaScaler, sigmaB):
@@ -62,11 +62,17 @@ class continuousCheck():
         Continuous Check gives us a building block for actions that give a continuos result (like how long a hit was), instead of just sucseed/fail
         mean of action = meanScaler * (meanVct dot player skill vector) + meanB
         '''
-        self.meanVct = meanVct
+        self.meanVct = np.array(meanVct)
         self.meanScaler = meanScaler
         self.meanB = meanB
-        self.sigmaVct = sigmaVct
+        self.sigmaVct = np.array(sigmaVct)
         self.sigmaScaler = sigmaScaler
+        self.sigmaB = sigmaB
+
+    def run(self, sklVct):
+        mean = self.meanScaler * (self.meanVct.dot(np.array(sklVct))) + self.meanB
+        sigma = self.sigmaScaler * (self.sigmaVct.dot(np.array(sklVct))) + self.sigmaB
+        return np.random.normal(mean, sigma)
         
 
 class Game:
@@ -94,14 +100,14 @@ class Player:
     def getName(self):
         return self.name
 
-    def getSklVector(self):
+    def getSklVct(self):
         #gives players skill vector
-        return self.sklVector
+        return self.skillVector
     
-    def think(self, gameState):
+    def think(self):
         #takes in the state of the game (tbd) and uses a baby N.N. to determine what action player will try to preform
-        sitConcept = self.sitAware.dot(gameState)
-        actVector = self.sitAct.dot(sitConcept)
+        
+        actVector = normalize(v)
         return actVector
     
 
@@ -146,3 +152,9 @@ class Fairground:
         return self.goalVct
     def getName(self):
         return self.name
+    
+def normalize(v):
+    norm=np.linalg.norm(v)
+    if norm==0:
+        norm=np.finfo(v.dtype).eps
+    return v/norm

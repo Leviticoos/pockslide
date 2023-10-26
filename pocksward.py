@@ -7,13 +7,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from enum import Enum
-import random
+import random as random
 
 
 #Game Code
 
 class Check:
-    def __init__(self, skillTransform,timeScale,n=1, helpText=''):
+    def __init__(self, skillTransform,timeMean,n=1, helpText=''):
         '''
         Define a check, which is a base unit of a play. Takes in a skill transform, which will map an action vector to different skills, and possibly 
         n is an intager that represents how many chances you have to succseed. This is a way of letting low chances be more likely. 
@@ -24,7 +24,7 @@ class Check:
         self.playTrans = np.array(skillTransform)
         self.n = int(n)
         self.help = helpText
-        self.scale = timeScale
+        self.timeMean = timeMean
 
     def help(self):
         return self.help
@@ -42,7 +42,7 @@ class Check:
         adjActVtr = np.multiply(np.array(actVtr), np.array(sklVtr))
         prob = adjPlayVtr.dot(np.array(adjActVtr))
         probN = 1-(1-prob)**self.n
-        roll = random()
+        roll = random.random()
         
         if roll<probN:
             check = True
@@ -54,7 +54,7 @@ class Check:
         else:
             return check
     def waitTime(self):
-        return exponential(self.scale)
+        return random.expovariate(1/self.timeMean)
 
 class continuousCheck():
     def __init__(self, meanVct, meanScaler, meanB, sigmaVct, sigmaScaler, sigmaB):
@@ -72,7 +72,7 @@ class continuousCheck():
     def run(self, sklVct):
         mean = self.meanScaler * (self.meanVct.dot(np.array(sklVct))) + self.meanB
         sigma = self.sigmaScaler * (self.sigmaVct.dot(np.array(sklVct))) + self.sigmaB
-        return np.random.normal(mean, sigma)
+        return random.gauss(mean, sigma)
         
 
 class Game:
@@ -106,8 +106,11 @@ class Player:
     
     def think(self):
         #takes in the state of the game (tbd) and uses a baby N.N. to determine what action player will try to preform
-        
-        actVector = normalize(v)
+        v1 = random.random()
+        v2 = random.random()
+        v3 = random.random()
+        v4 = random.random()
+        actVector = normalize([v1, v2, v3, v4])
         return actVector
     
 

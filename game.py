@@ -15,8 +15,8 @@ class GameStateEnum(Enum):
         preGame     = 1
         slide       = 2
         clink       = 3
-        postClink   = 4
-        changeSides = 5
+        hitch       = 16
+        scrambleAdmin   = 4
         breather    = 6
         switch      = 7
         braek       = 8
@@ -24,7 +24,7 @@ class GameStateEnum(Enum):
         hammer      = 10
         dink        = 11
         nail        = 12
-        postNail    = 13
+        scrumAdmin    = 13
         recess      = 14
         final       = 15
 
@@ -37,19 +37,22 @@ class Game:
         self.start = startTimeSST
         self.clock = startTimeSST
         self.gameState = GameStateEnum.preGame
-        self.iterator = 1
+        self.iterator = 0
+        self.place = 0
         self.pylon = 1
-        self.homeUp = True
+        self.homeUp = False #will flip on first scrambleAdmin run
         self.teamUp = self.homeTeam
         self.teamDown = self.awayTeam
         self.scores = [0,0] #first is home team, second is away
+        self.playVct = [0,0,0,0]
 
         #define Checks
         #scramble Chekcks
-        self.slideChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=10)
-        
+        self.slideChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3)
+        self.clinkChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3)
+        self.hitch      = pk.continuousCheck([1,0,0,0], 10, 80, [0,1,0,0], 20, 0)
         #Scrum Checks
-        self.switchChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=10)
+        self.switchChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3)
         self.braekChk   = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
         self.gasChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1)
         self.hammerChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3) 
@@ -60,82 +63,115 @@ class Game:
         #or do I put that in pregame?
     
     def run(self):
-        if self.gameState.value == 1:
-            #pregame code
-            waitTime = 1000*60*5 #five minutes to talk
-            #todo: set up 
-            text = 'Warmimng up!'
-            #advance enum
-            stateSimmed = self.gameState
-            self.gameState = GameStateEnum.slide
+        if self.gameState.name == "preGame":
+            waitTime = 6 #five minutes to talk
+            #todo: set up random things
             
-            return True, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime
+            #save output
+            out = True, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime
+            #advance stats
+            self.gameState = GameStateEnum.scrambleAdmin
+            #return output
+            return out
             
-        elif self.gameState.value == 2:
-            #slide
+        elif self.gameState.name == "slide":
             #Get slider for the pylon
-            player = self.teamUp.getOrder()[self.pylon]
+            player = self.teamUp.getOrder()[self.pylon - 1]
             #feed the acting player the game state, get his actVct
             actVct = player.think() #TODO WITH ALEX
+            #update play vector
+            self.playVct = actVct
             #Run the check
             result = self.slideChk.run([1,1,1,1], actVct, player.getSklVct())
             #get the time for play
             waitTime = self.slideChk.waitTime()
             self.clock += waitTime
+            #define outputs
+            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
             #branch depending on result
-            stateSimmed = self.gameState
             if result:
-                 self.gameState.value = 3
+                 self.gameState = GameStateEnum.clink
             else:
-                 self.gameState.value = 2
+                 self.gameState = GameStateEnum.scrambleAdmin
                  self.iterator += 1
             #return results
-            return result, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
-        
-        elif self.gameState.value == 3:
+            return out
+            
+        elif self.gameState.name == "clink":
             #clink
             #Get clinker for the pylon
-            player = self.teamUp.getorder()[(self.pylon + 1)%5]
+            player = self.teamUp.getOrder()[self.pylon % 5]
             #feed the acting player the game state, get his actVct
             actVct = player.think() #TODO WITH ALEX
-            #Run the check
-            result = self.slideChk.run([1,1,1,1], actVct, player.getSklVct())
+            #Run the check (hit or miss)
+            result = self.slideChk.run(self.playVct, actVct, player.getSklVct())
             #get the time for play
-            waitTime = self.slideChk.time()
+            waitTime = self.slideChk.waitTime()
             self.clock += waitTime
             #branch depending on result
+            
+            #set Results
+            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
+            #update state stats
             stateSimmed = self.gameState
             if result:
-                 self.gameState.value = 3
+                 self.gameState = GameStateEnum.hitch
             else:
-                 self.gameState.value = 2
+                 self.gameState = GameStateEnum.scrambleAdmin
                  self.iterator += 1
-            #return results
-            return result, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
-
-        elif self.gameState.value == 6:
-            #breather
-            u
-        elif self.gameState.value == 7:
-            #switch
-            #Get switcher for the pylon
-            player = self.teamUp.getorder()[self.pylon]
-            #feed the switcher the game state, get his actVct
-            actVct = player.think() #TODO WITH ALEX
-            #Run the check
-            result = self.switchChk.run([1,1,1,1], actVct, player.getSklVct())
-            #get the time for play
-            waitTime = self.switchChk.time()
-            self.clock += waitTime
-            #branch depending on result
-            stateSimmed = self.gameState
-            if result:
-                 self.gameState.value = 8
-            else:
-                 self.gameState.value = 13
-            #return results
-            return result, [stateSimmed, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
+                 
+            return out
         
+        elif self.gameState.name =="hitch":
+            #see how long it flys baby!
+            player = self.teamUp.getOrder()[self.pylon % 5]
+            result = self.hitch.run(player.getSklVct())
+            if self.homeUp:
+                self.place += result
+            else:
+                self.place -= result
+            #TODO Flesh out wait time
+            waitTime = 3
+            #set up output
+            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime
+            #advance gameState
+            self.gameState = GameStateEnum.scrambleAdmin
+            return out
+        
+        elif self.gameState.name == "scrambleAdmin":
+            #admin game state updates scramble, and starts next "play"
+            if self.homeUp:
+                self.homeUp = False
+                self.teamUp = self.awayTeam
+                self.gameState = GameStateEnum.slide
+            else:
+                self.homeUp = True
+                self.teamUp = self.homeTeam
+                if self.iterator < 5:
+                    self.iterator += 1
+                    self.gameState = GameStateEnum.slide
+                else:
+                    self.iterator = 1
+                    self.gameState = GameStateEnum.breather
+            
+            return 0
+                    
+        elif self.gameState.name == "breather":
+            #breather
+            if self.place >= 0:
+                self.teamUp = self.homeTeam
+                self.teamDown = self.awayTeam
+                self.homeUp = True
+            else:
+                self.teamUp = self.awayTeam
+                self.teamDown = self.homeTeam
+                self.homeUp = False
+                
+            
+            return self.place
+        
+        elif self.gameState.value == 7:
+            d=20
 
 
         

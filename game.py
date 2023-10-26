@@ -48,16 +48,16 @@ class Game:
 
         #define Checks
         #scramble Chekcks
-        self.slideChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3)
-        self.clinkChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3)
+        self.slideChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
+        self.clinkChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
         self.hitch      = pk.continuousCheck([1,0,0,0], 10, 80, [0,1,0,0], 20, 0)
         #Scrum Checks
-        self.switchChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3)
-        self.braekChk   = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
-        self.gasChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1)
-        self.hammerChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1, n=3) 
-        self.dinkChk    = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 1)
-        self.nailChk    = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 1) 
+        self.switchChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3)
+        self.braekChk   = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
+        self.gasChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1)
+        self.hammerChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3) 
+        self.dinkChk    = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
+        self.nailChk    = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1) 
 
         #Todo, game wide special events? Weather? Setup players random change?
         #or do I put that in pregame?
@@ -154,7 +154,7 @@ class Game:
                     self.iterator = 1
                     self.gameState = GameStateEnum.breather
             
-            return 0
+            return False, [], 0.5
                     
         elif self.gameState.name == "breather":
             #breather

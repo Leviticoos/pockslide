@@ -13,7 +13,7 @@ import random as random
 #Game Code
 
 class Check:
-    def __init__(self, skillTransform,timeMean,n=1, helpText=''):
+    def __init__(self, skillTransform,timeMean, timeB, n=1, helpText=''):
         '''
         Define a check, which is a base unit of a play. Takes in a skill transform, which will map an action vector to different skills, and possibly 
         n is an intager that represents how many chances you have to succseed. This is a way of letting low chances be more likely. 
@@ -25,6 +25,7 @@ class Check:
         self.n = int(n)
         self.help = helpText
         self.timeMean = timeMean
+        self.timeB = timeB
 
     def help(self):
         return self.help
@@ -54,7 +55,7 @@ class Check:
         else:
             return check
     def waitTime(self):
-        return random.expovariate(1/self.timeMean)
+        return random.expovariate(1/self.timeMean)+timeB
 
 class continuousCheck():
     def __init__(self, meanVct, meanScaler, meanB, sigmaVct, sigmaScaler, sigmaB):

@@ -133,7 +133,7 @@ class Game:
             #TODO Flesh out wait time
             waitTime = 3
             #set up output
-            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime
+            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock], waitTime
             #advance gameState
             self.gameState = GameStateEnum.scrambleAdmin
             return out

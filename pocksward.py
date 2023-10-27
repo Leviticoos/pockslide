@@ -55,7 +55,7 @@ class Check:
         else:
             return check
     def waitTime(self):
-        return random.expovariate(1/self.timeMean)+timeB
+        return random.expovariate(1/self.timeMean)+self.timeB
 
 class continuousCheck():
     def __init__(self, meanVct, meanScaler, meanB, sigmaVct, sigmaScaler, sigmaB):

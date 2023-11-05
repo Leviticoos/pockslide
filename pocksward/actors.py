@@ -75,14 +75,6 @@ class continuousCheck():
         sigma = self.sigmaScaler * (self.sigmaVct.dot(np.array(sklVct))) + self.sigmaB
         return random.gauss(mean, sigma)
         
-
-class Game:
-    def __init__(self, t):
-        self.t = t
-        
-    def run():
-        self.t = 0
-
 #Peaple Code
 
 class Player:
@@ -113,6 +105,10 @@ class Player:
         v4 = random.random()
         actVector = normalize([v1, v2, v3, v4])
         return actVector
+    
+    def changeSklVct(self, sklMod):
+        self.skillVector = normalize(np.add(self.skillVector, np.array(sklMod)))
+        
     
 
 class Coach:
@@ -148,15 +144,19 @@ class Team:
 #MISC entities
 
 class Fairground:
-    def __init__(self, name, goalVct):
+    def __init__(self, name, goalVct, halfLength):
         self.name = name
         self.goalVct = np.array(goalVct)
+        self.halfLength = halfLength
 
     def getGoalVct(self):
         return self.goalVct
     def getName(self):
         return self.name
-    
+    def getHalfLength(self):
+        return self.halfLength
+
+#MISC functions  
 def normalize(v):
     norm=np.linalg.norm(v)
     if norm==0:

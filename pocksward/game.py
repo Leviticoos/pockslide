@@ -24,7 +24,7 @@ class GameStateEnum(Enum):
         hammer      = 10
         dink        = 11
         nail        = 12
-        scrumAdmin    = 13
+        scrumAdmin      = 13
         recess      = 14
         final       = 15
 
@@ -68,7 +68,7 @@ class Game:
             #todo: set up random things
             
             #save output
-            out = True, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime
+            out = GameStateEnum.preGame, waitTime
             #advance stats
             self.gameState = GameStateEnum.scrambleAdmin
             #return output
@@ -76,7 +76,7 @@ class Game:
             
         elif self.gameState.name == "slide":
             #Get slider for the pylon
-            player = self.teamUp.getOrder()[self.pylon - 1]
+            player = self.teamUp.getOrder()[self.iterator - 1]
             #feed the acting player the game state, get his actVct
             actVct = player.think() #TODO WITH ALEX
             #update play vector
@@ -87,13 +87,13 @@ class Game:
             waitTime = self.slideChk.waitTime()
             self.clock += waitTime
             #define outputs
-            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
+                #Game state simmed (hard coded), result of sim, game Vector
+            out = GameStateEnum.slide, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, actVct]]
             #branch depending on result
             if result:
                  self.gameState = GameStateEnum.clink
             else:
                  self.gameState = GameStateEnum.scrambleAdmin
-                 self.iterator += 1
             #return results
             return out
             
@@ -111,14 +111,13 @@ class Game:
             #branch depending on result
             
             #set Results
-            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.clock], waitTime #TODO may need to return gameState.value. will see!
+            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock], waitTime #TODO may need to return gameState.value. will see!
             #update state stats
             stateSimmed = self.gameState
             if result:
                  self.gameState = GameStateEnum.hitch
             else:
                  self.gameState = GameStateEnum.scrambleAdmin
-                 self.iterator += 1
                  
             return out
         
@@ -140,7 +139,9 @@ class Game:
         
         elif self.gameState.name == "scrambleAdmin":
             #admin game state updates scramble, and starts next "play"
-            if self.homeUp:
+            if abs(self.place) > self.fg.getHalfLength():
+                self.gameState = GameStateEnum.breather
+            elif self.homeUp:
                 self.homeUp = False
                 self.teamUp = self.awayTeam
                 self.gameState = GameStateEnum.slide
@@ -154,10 +155,13 @@ class Game:
                     self.iterator = 1
                     self.gameState = GameStateEnum.breather
             
-            return False, [], 0.5
+            return GameStateEnum.scrambleAdmin
                     
         elif self.gameState.name == "breather":
             #breather
+            #reset values
+            self.iterator = 0
+            #check side the large pock has landed, determining sides for the next inning
             if self.place >= 0:
                 self.teamUp = self.homeTeam
                 self.teamDown = self.awayTeam
@@ -166,13 +170,27 @@ class Game:
                 self.teamUp = self.awayTeam
                 self.teamDown = self.homeTeam
                 self.homeUp = False
-                
+            #see if they went sward
+            if abs(self.place) > self.fg.getHalfLength():
+                if self.homeUp:
+                    self.scores[0] += 20
+                else:
+                    self.scores[1] += 20
+                out = self.gameState
+                self.gameState = GameStateEnum.recess
+                return out
+            #TODO make some random thing happen for announcers?
+            #THis could be its own thing huh, talk at meeting about it.
             
-            return self.place
+            out = self.gameState, self.place, self.scores
+            self.gameState = GameStateEnum.switch
+            self.place = 0
+            return out
         
-        elif self.gameState.value == 7:
-            d=20
-
+        elif self.gameState == GameStateEnum.switch:
+            return "SWITCH CATCH"
+        
+        
 
         
 

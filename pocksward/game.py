@@ -10,6 +10,9 @@ from importlib import reload  # Python 3.4+
 pk = reload(pk)
 
 #Define main play, and the checks and State enum Class needed
+class GameStep():
+    ##GameStateEnum.clink, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, player.getSklVct(), actVct]]
+    def __init__(self, gameState)
 
 class GameStateEnum(Enum):
         preGame     = 1
@@ -88,7 +91,7 @@ class Game:
             self.clock += waitTime
             #define outputs
                 #Game state simmed (hard coded), result of sim, game Vector
-            out = GameStateEnum.slide, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, actVct]]
+            out = GameStateEnum.slide, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, player.getSklVct(), actVct]]
             #branch depending on result
             if result:
                  self.gameState = GameStateEnum.clink
@@ -111,7 +114,7 @@ class Game:
             #branch depending on result
             
             #set Results
-            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock], waitTime #TODO may need to return gameState.value. will see!
+            out = GameStateEnum.clink, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, player.getSklVct(), actVct]] #TODO may need to return gameState.value. will see!
             #update state stats
             stateSimmed = self.gameState
             if result:
@@ -132,7 +135,7 @@ class Game:
             #TODO Flesh out wait time
             waitTime = 3
             #set up output
-            out = result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock], waitTime
+            out = GameStateEnum.hitch, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [0,0,0]]
             #advance gameState
             self.gameState = GameStateEnum.scrambleAdmin
             return out
@@ -155,7 +158,7 @@ class Game:
                     self.iterator = 1
                     self.gameState = GameStateEnum.breather
             
-            return GameStateEnum.scrambleAdmin
+            return GameStateEnum.scrambleAdmin, 0, 0
                     
         elif self.gameState.name == "breather":
             #breather
@@ -176,13 +179,13 @@ class Game:
                     self.scores[0] += 20
                 else:
                     self.scores[1] += 20
-                out = self.gameState
+                out = GameStateEnum.breather
                 self.gameState = GameStateEnum.recess
                 return out
             #TODO make some random thing happen for announcers?
             #THis could be its own thing huh, talk at meeting about it.
             
-            out = self.gameState, self.place, self.scores
+            out = self.gameState, 0, 0
             self.gameState = GameStateEnum.switch
             self.place = 0
             return out

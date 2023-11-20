@@ -12,7 +12,7 @@ import random as random
 
 #Game Code
 
-class Check:
+class quantCheck:
     def __init__(self, skillTransform,timeMean, timeB, n=1, helpText=''):
         '''
         Define a check, which is a base unit of a play. Takes in a skill transform, which will map an action vector to different skills, and possibly 

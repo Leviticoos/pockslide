@@ -9,10 +9,72 @@ import pocksward as pk
 from importlib import reload  # Python 3.4+
 pk = reload(pk)
 
-#Define main play, and the checks and State enum Class needed
+class StepType(Enum):
+    undefined = 0
+    quantCheck = 1
+    contCheck = 2
+    admin = 3
+
+#Define the results of a game step, to orginize data we output
 class GameStep():
     ##GameStateEnum.clink, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, player.getSklVct(), actVct]]
-    def __init__(self, gameState)
+    
+    
+    
+    def __init__(self, gameState, player, startTime, playVct = False):
+        self.gameState = gameState
+        self.player = player
+        self.check = startTime
+        self.playVct = playVct
+        self.stepType = StepType.undefined
+    
+    def defineQuantCheck(self, trueState, falseState, check):
+        self.trueState = trueState
+        self.falseState = falseState
+        self.check = check
+        self.stepType = StepType.quantCheck
+        
+        
+    def playQuantStep(self):
+        actVct = self.player.think() #TODO WITH ALEX
+        #update play vector
+        if self.playVct == False:
+            self.playVct = actVct
+        #Run the check
+        result = check.run(playVct, actVct, player.getSklVct())
+        #get the time for play
+        waitTime = check.waitTime()
+        endTime = startTime + waitTime
+        #define outputs
+            #Game state simmed (hard coded), result of sim, game Vector
+        #branch depending on result
+        if result:
+                nextState = trueState
+        else:
+                nextState = falseState
+        #return results
+        return 0
+
+#general true/false step    
+def playStep(player, check, trueState, falseState, startTime, playVct = False):
+    actVct = player.think() #TODO WITH ALEX
+    #update play vector
+    if playVct == False:
+        playVct = actVct
+    #Run the check
+    result = check.run(playVct, actVct, player.getSklVct())
+    #get the time for play
+    waitTime = check.waitTime()
+    endTime = startTime + waitTime
+    #define outputs
+        #Game state simmed (hard coded), result of sim, game Vector
+    #branch depending on result
+    if result:
+            nextState = trueState
+    else:
+            nextState = falseState
+    #return results
+    return 0
 
 class GameStateEnum(Enum):
         preGame     = 1

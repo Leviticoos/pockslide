@@ -1,3 +1,6 @@
+#import modules for all sub-.py files
+import numpy as np
+
 class Team:
     '''Team is a class that contains a coach, a list of players (5), stats, and a N.N. to control personel decisions'''
     def __init__(self, coach, players, stats=np.zeros(10)):

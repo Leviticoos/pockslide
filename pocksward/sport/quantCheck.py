@@ -1,3 +1,6 @@
+import numpy as np
+import random as random
+    
 class quantCheck:
     def __init__(self, skillTransform,timeMean, timeB, n=1, helpText=''):
         '''

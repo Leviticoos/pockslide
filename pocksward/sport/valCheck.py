@@ -1,3 +1,7 @@
+#import modules for all sub-.py files
+import numpy as np
+import random as random
+    
 class valCheck():
     def __init__(self, meanVct, meanScaler, meanB, sigmaVct, sigmaScaler, sigmaB):
         '''

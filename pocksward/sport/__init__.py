@@ -5,7 +5,11 @@ from enum import Enum
 import random as random
 
 #Import all files in each sub-folder of the pocksward module
-from .actors import *
-from .sport import *
-from .world import *
+from .Game import *
+from .Leauge import *
+from .QuantCheck import *
+from .ValCheck import *
 
+
+
+print("piss and Shit, main init imported, init?")

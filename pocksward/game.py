@@ -113,16 +113,16 @@ class Game:
 
         #define Checks
         #scramble Chekcks
-        self.slideChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
-        self.clinkChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
+        self.slideChk   = pk.quantCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
+        self.clinkChk   = pk.quantCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
         self.hitch      = pk.continuousCheck([1,0,0,0], 10, 80, [0,1,0,0], 20, 0)
         #Scrum Checks
-        self.switchChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3)
-        self.braekChk   = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
-        self.gasChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1)
-        self.hammerChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3) 
-        self.dinkChk    = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
-        self.nailChk    = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1) 
+        self.switchChk  = pk.quantCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3)
+        self.braekChk   = pk.quantCheck([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1, 0,0,0]], 2, 1)
+        self.gasChk     = pk.quantCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1)
+        self.hammerChk  = pk.quantCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3) 
+        self.dinkChk    = pk.quantCheck([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
+        self.nailChk    = pk.quantCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1) 
 
         #Todo, game wide special events? Weather? Setup players random change?
         #or do I put that in pregame?
@@ -146,7 +146,6 @@ class Game:
             actVct = player.think() #TODO WITH ALEX
             #update play vector
             self.playVct = actVct
-            self.gameState, self.clock = BoolStep(player.think(), self.slideChk.run([1,1,1,1], player.think(), player.getSklVct))
             #Run the check
             result = self.slideChk.run([1,1,1,1], actVct, player.getSklVct())
             #get the time for play

@@ -1,3 +1,7 @@
+#import modules for all sub-.py files
+import numpy as np
+import random as random
+
 class Player:
     '''Player is a class that contains the player's skill vector, nerual net, TODO'''
 
@@ -24,9 +28,9 @@ class Player:
         v2 = random.random()
         v3 = random.random()
         v4 = random.random()
-        actVector = normalize([v1, v2, v3, v4])
+        actVector = ([v1, v2, v3, v4]) / np.linalg.norm([v1, v2, v3, v4])
         return actVector
     
     def changeSklVct(self, sklMod):
-        self.skillVector = normalize(np.add(self.skillVector, np.array(sklMod)))
+        self.skillVector = np.add(self.skillVector, np.array(sklMod)) / np.linalg.norm(np.add(self.skillVector, np.array(sklMod)))
   

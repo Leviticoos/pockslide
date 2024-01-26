@@ -5,10 +5,6 @@ from enum import Enum
 import random as random
 
 #Import all files in each sub-folder of the pocksward module
-from .player import *
-from .coach import *
-from .team import *
-
-
-
-print("piss and Shit, main init imported, init?")
+from .fairground import *
+from .planet import *
+from .solarSystem import *

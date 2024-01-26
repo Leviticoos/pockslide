@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Fairground:
     def __init__(self, name, goalVct, halfLength):
         self.name = name

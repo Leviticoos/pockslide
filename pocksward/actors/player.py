@@ -22,8 +22,9 @@ class Player:
         #gives players skill vector
         return self.skillVector
     
-    def think(self):
+    def think(self, time):
         #takes in the state of the game (tbd) and uses a baby N.N. to determine what action player will try to preform
+        random.seed(time*24.56 + 365)
         v1 = random.random()
         v2 = random.random()
         v3 = random.random()

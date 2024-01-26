@@ -1,4 +1,4 @@
-def boolStep(playVct, actVct, sklVct, check, trueState, falseState, startTime):
+def valStep(playVct, actVct, sklVct, check, trueState, falseState, startTime):
     '''
     This function defines a boolean step in a game, where a player object player performs an action against QuantCheck object check.
     If this check passes, or returns true, this returns the next game state enum trueState
@@ -6,9 +6,9 @@ def boolStep(playVct, actVct, sklVct, check, trueState, falseState, startTime):
     Check is a QuantCheck object'''
 
     #Run the check
-    result = check.run(playVct, actVct, sklVct, startTime)
+    result = check.run(sklVct, startTime)
     #get the time for play
-    waitTime = check.waitTime(startTime)
+    waitTime = check.waitTime()
     endTime = startTime + waitTime
     #define outputs
         #Game state simmed (hard coded), result of sim, game Vector
@@ -18,4 +18,4 @@ def boolStep(playVct, actVct, sklVct, check, trueState, falseState, startTime):
     else:
             nextState = falseState
     #return results
-    return result, nextState, actVct, endTime
+    return nextState, endTime

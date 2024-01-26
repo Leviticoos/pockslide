@@ -6,8 +6,8 @@ class Planet:
         self.dayT = dayLength
         self.mass = mass
         self.r = averageDistance
-        self.yearT = TODO CALC WITH KEPLER
+        self.yearT = 0 #TODO with keppler
         self.angle0 = angleAtZero
     
     def getPosition(self, t):
-        
+        return 0

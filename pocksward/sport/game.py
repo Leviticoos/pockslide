@@ -9,73 +9,6 @@ import pocksward as pk
 from importlib import reload  # Python 3.4+
 pk = reload(pk)
 
-class StepType(Enum):
-    undefined = 0
-    quantCheck = 1
-    contCheck = 2
-    admin = 3
-
-#Define the results of a game step, to orginize data we output
-class GameStep():
-    ##GameStateEnum.clink, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, player.getSklVct(), actVct]]
-    
-    
-    
-    def __init__(self, gameState, player, startTime, playVct = False):
-        self.gameState = gameState
-        self.player = player
-        self.check = startTime
-        self.playVct = playVct
-        self.stepType = StepType.undefined
-    
-    def defineQuantCheck(self, trueState, falseState, check):
-        self.trueState = trueState
-        self.falseState = falseState
-        self.check = check
-        self.stepType = StepType.quantCheck
-        
-        
-    def playQuantStep(self):
-        actVct = self.player.think() #TODO WITH ALEX
-        #update play vector
-        if self.playVct == False:
-            self.playVct = actVct
-        #Run the check
-        result = check.run(playVct, actVct, player.getSklVct())
-        #get the time for play
-        waitTime = check.waitTime()
-        endTime = startTime + waitTime
-        #define outputs
-            #Game state simmed (hard coded), result of sim, game Vector
-        #branch depending on result
-        if result:
-                nextState = trueState
-        else:
-                nextState = falseState
-        #return results
-        return 0
-
-#general true/false step    
-def playStep(player, check, trueState, falseState, startTime, playVct = False):
-    actVct = player.think() #TODO WITH ALEX
-    #update play vector
-    if playVct == False:
-        playVct = actVct
-    #Run the check
-    result = check.run(playVct, actVct, player.getSklVct())
-    #get the time for play
-    waitTime = check.waitTime()
-    endTime = startTime + waitTime
-    #define outputs
-        #Game state simmed (hard coded), result of sim, game Vector
-    #branch depending on result
-    if result:
-            nextState = trueState
-    else:
-            nextState = falseState
-    #return results
-    return 0
-
 class GameStateEnum(Enum):
         preGame     = 1
         slide       = 2
@@ -89,7 +22,7 @@ class GameStateEnum(Enum):
         hammer      = 10
         dink        = 11
         nail        = 12
-        scrumAdmin      = 13
+        scrumAdmin  = 13
         recess      = 14
         final       = 15
 
@@ -113,16 +46,16 @@ class Game:
 
         #define Checks
         #scramble Chekcks
-        self.slideChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
-        self.clinkChk   = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
-        self.hitch      = pk.continuousCheck([1,0,0,0], 10, 80, [0,1,0,0], 20, 0)
+        self.slideChk   = pk.boolCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
+        self.clinkChk   = pk.boolCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 3, 1, n=3)
+        self.hitch      = pk.valCheck([1,0,0,0], 10, 80, [0,1,0,0], 20, 0, 2)
         #Scrum Checks
-        self.switchChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3)
-        self.braekChk   = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
-        self.gasChk     = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1)
-        self.hammerChk  = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3) 
-        self.dinkChk    = pk.Check([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
-        self.nailChk    = pk.Check([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1) 
+        self.switchChk  = pk.boolCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3)
+        self.braekChk   = pk.boolCheck([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
+        self.gasChk     = pk.boolCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1)
+        self.hammerChk  = pk.boolCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1, n=3) 
+        self.dinkChk    = pk.boolCheck([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]], 2, 1)
+        self.nailChk    = pk.boolCheck([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]], 2, 1) 
 
         #Todo, game wide special events? Weather? Setup players random change?
         #or do I put that in pregame?
@@ -142,50 +75,17 @@ class Game:
         elif self.gameState.name == "slide":
             #Get slider for the pylon
             player = self.teamUp.getOrder()[self.iterator - 1]
-            #feed the acting player the game state, get his actVct
-            actVct = player.think() #TODO WITH ALEX
-            #update play vector
-            self.playVct = actVct
-            self.gameState, self.clock = BoolStep(player.think(), self.slideChk.run([1,1,1,1], player.think(), player.getSklVct))
-            #Run the check
-            result = self.slideChk.run([1,1,1,1], actVct, player.getSklVct())
-            #get the time for play
-            waitTime = self.slideChk.waitTime()
-            self.clock += waitTime
-            #define outputs
-                #Game state simmed (hard coded), result of sim, game Vector
-            out = GameStateEnum.slide, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, player.getSklVct(), actVct]]
-            #branch depending on result
-            if result:
-                 self.gameState = GameStateEnum.clink
-            else:
-                 self.gameState = GameStateEnum.scrambleAdmin
-            #return results
-            return out
+            #run bool slide step, takes play, action, and skl vct
+            result, self.gameState, self.playVct, self.clock = pk.boolStep(player.think(self.clock), player.think(self.clock), player.getSklVct(), self.slideChk, GameStateEnum.hitch, GameStateEnum.scrambleAdmin, self.clock)
+            #compile output data
+            return [GameStateEnum.slide, result, [self.pylon, self.homeUp, self.iterator], [self.scores, self.place, self.clock], [player.getName(), player.getSklVct(), actVct]]
             
         elif self.gameState.name == "clink":
-            #clink
             #Get clinker for the pylon
             player = self.teamUp.getOrder()[self.pylon % 5]
             #feed the acting player the game state, get his actVct
-            actVct = player.think() #TODO WITH ALEX
-            #Run the check (hit or miss)
-            result = self.slideChk.run(self.playVct, actVct, player.getSklVct())
-            #get the time for play
-            waitTime = self.slideChk.waitTime()
-            self.clock += waitTime
-            #branch depending on result
-            
-            #set Results
-            out = GameStateEnum.clink, result, [self.gameState, self.iterator, self.pylon, self.homeUp, self.scores, self.place, self.clock, [player, player.getSklVct(), actVct]] #TODO may need to return gameState.value. will see!
-            #update state stats
-            stateSimmed = self.gameState
-            if result:
-                 self.gameState = GameStateEnum.hitch
-            else:
-                 self.gameState = GameStateEnum.scrambleAdmin
-                 
-            return out
+            result, self.gameState, self.playVct, self.clock = pk.boolStep(self.playVct, player.think(self.clock), player.getSklVct(), self.slideChk, GameStateEnum.hitch, GameStateEnum.scrambleAdmin, self.clock)
+
         
         elif self.gameState.name =="hitch":
             #see how long it flys baby!

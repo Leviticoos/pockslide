@@ -3,35 +3,32 @@ import numpy as np
 import random as random
 
 class Player:
-    '''Player is a class that contains the player's skill vector, nerual net, TODO'''
+    '''Player is a class that contains all the definition of a pocksward player.'''
 
-    def __init__(self, name, sklVect, sitAware, sitAct):
-        #Define behavior controling variables
+    def __init__(self, name, pitchNN, pitchSpeed, viewExponent, blockNN, blockSpeed, polarizeNN, hitNN, hitSkl, ageRate = 1, age = 0):
+        '''
+        Player is a class that contains all the definition of a pocksward player.
+        name is a string that holds a players name
+        stats is a numpy array containing the stats of a player by half year (before and after trade day), in the following format for each half-year
+            [Year, Team, Pitch attepmts, Pitch successes, mean of Aetherization, std of Aetherization, Block atmpts, Block succsesse, avg movement on block, hit ]
+        '''
+        #import initiation vars
         self.name = name
-        self.skillVector = np.array(sklVect)
-        self.sitAware = np.array(sitAware)
-        self.sitAct = np.array(sitAct)
+        self.pitchNN = pitchNN
+        self.pitchSpd = pitchSpeed
+        self.blockNN = blockNN
+        self.blockSpd = blockSpeed
+        self.polarizeNN = polarizeNN
+        self.hitNN = hitNN
+        self.hitSkl = hitSkl
+        self.ageRate = ageRate
+        self.age = age
 
         #define empty data set
-        self.stats = [] #2D array arguments: Year, Team, Launches, unitsFromLaunches, Swats, unitsFromSwats, 
+        self.stats = [] 
 
     def getName(self):
         return self.name
-
-    def getSklVct(self):
-        #gives players skill vector
-        return self.skillVector
     
-    def think(self, time):
-        #takes in the state of the game (tbd) and uses a baby N.N. to determine what action player will try to preform
-        random.seed(time*24.56 + 365)
-        v1 = random.random()
-        v2 = random.random()
-        v3 = random.random()
-        v4 = random.random()
-        actVector = ([v1, v2, v3, v4]) / np.linalg.norm([v1, v2, v3, v4])
-        return actVector
-    
-    def changeSklVct(self, sklMod):
-        self.skillVector = np.add(self.skillVector, np.array(sklMod)) / np.linalg.norm(np.add(self.skillVector, np.array(sklMod)))
+    def pitch(self, gameState, coachThought, fairground, x)
   

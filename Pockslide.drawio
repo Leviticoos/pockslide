@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Leauge.py" id="8VVvji6yyK4iROJsNHM2">
-        <mxGraphModel dx="4103" dy="4723" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1826" dy="2957" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -469,20 +469,6 @@
                 </mxCell>
                 <mxCell id="EN2ydv2vulzr9Ajn7yJn-39" value="think.py" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
                     <mxGeometry x="705" y="490" width="60" height="40" as="geometry"/>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram id="67iV_TqLXuYb7wYhlNM8" name="BoolStep.py">
-        <mxGraphModel dx="465" dy="360" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="fKFYS4E5YnYGEVtYDx6J-1" value="BoolStep Function" style="swimlane;" vertex="1" parent="1">
-                    <mxGeometry x="300" y="220" width="200" height="200" as="geometry"/>
-                </mxCell>
-                <mxCell id="fKFYS4E5YnYGEVtYDx6J-2" value="" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="1">
-                    <mxGeometry x="320" y="140" width="70" height="40" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

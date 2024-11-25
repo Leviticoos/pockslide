@@ -9,26 +9,20 @@ import pocksward as pk
 from importlib import reload  # Python 3.4+
 pk = reload(pk)
 
+#create game enumerated class 
 class GameStateEnum(Enum):
         preGame     = 1
-        slide       = 2
-        clink       = 3
-        hitch       = 16
-        scrambleAdmin   = 4
-        breather    = 6
-        switch      = 7
-        braek       = 8
-        gas         = 9
-        hammer      = 10
-        dink        = 11
-        nail        = 12
-        scrumAdmin  = 13
-        recess      = 14
+        pitch       = 2
+        block       = 3
+        hit         = 4
+        flight      = 5
+        postFlight  = 6
+        sideChange  = 7
         final       = 15
 
 class Game:
              
-    def __init__(self, homeTeam, awayTeam, fairground, startTimeSST):
+    def __init__(self, homeTeam, awayTeam, fairground, startTimeSST, pylon = 0, set = 0):
         self.homeTeam = homeTeam
         self.awayTeam = awayTeam
         self.fg = fairground

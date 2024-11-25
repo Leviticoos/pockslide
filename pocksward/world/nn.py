@@ -36,20 +36,19 @@ def flat_array_to_model(flat_weights, model):
         param.data = torch.tensor(flat_weights[idx:idx+numel].reshape(param.shape)).float()
         idx += numel
 
-# Crossover function: combines the weights of two models
-def crossover(model1, model2, solution1, solution2):
-    # Extract model weights
-    flat_weights1 = model_to_flat_array(model1)
-    flat_weights2 = model_to_flat_array(model2)
+# Crossover function: combines the weights of two models DAMIT THIS CODE IS CHATGPT and is wrong?
+def crossover(models, coefs):
+    # Extract model weights to numpy array
+    flat_models = model_to_flat_array(models)
+    
+    print(flat_models)
+    #do weighted average of values
 
     # Perform uniform crossover: combine the weights
-    crossover_point = np.random.randint(0, len(flat_weights1))
-    child1_weights = np.concatenate([flat_weights1[:crossover_point], flat_weights2[crossover_point:]])
-    child2_weights = np.concatenate([flat_weights2[:crossover_point], flat_weights1[crossover_point:]])
-
+    
     # Create child models
-    child_model1 = SimpleNN(input_size=4, hidden_size=10, output_size=3)
-    child_model2 = SimpleNN(input_size=4, hidden_size=10, output_size=3)
+    child_model1 = NN(input_size=4, hidden_size=10, output_size=3)
+    child_model2 = NN(input_size=4, hidden_size=10, output_size=3)
 
     flat_array_to_model(child1_weights, child_model1)
     flat_array_to_model(child2_weights, child_model2)

@@ -30,5 +30,5 @@ class Player:
     def getName(self):
         return self.name
     
-    def pitch(self, gameState, coachThought, fairground, x)
-  
+    def pitch(self, gameState, coachThought, fairground, x):
+        return False

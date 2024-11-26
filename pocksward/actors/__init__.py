@@ -8,7 +8,3 @@ import random as random
 from .player import *
 from .coach import *
 from .team import *
-
-
-
-print("piss and Shit, main init imported, init?")
